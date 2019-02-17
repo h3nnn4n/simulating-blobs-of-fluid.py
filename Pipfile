@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "*"
+
+[dev-packages]
+"autopep8" = "*"
+pylint = "*"
+"pep8" = "*"
+pytest = "*"
+hypothesis = "*"
+
+[requires]
+python_version = "3.7"

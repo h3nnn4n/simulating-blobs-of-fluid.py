@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "/Users/renanssilva/.local/share/virtualenvs/simulating-blobs-of-fluid.py-p4ITbfe1/bin/python",
+    "python.linting.pylintEnabled": true,
+
+    "python.formatting.provider": "autopep8",
+    "python.formatting.autopep8Args": ["--aggressive", "--aggressive", "--max-line-length=119"],
+    "editor.formatOnSave": true,
+}
