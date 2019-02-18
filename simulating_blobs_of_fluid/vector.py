@@ -119,6 +119,12 @@ class Vector:
 
         return self
 
+    def random_move(self):
+        self.x += uniform(-1, 1)
+        self.y += uniform(-1, 1)
+
+        return self
+
     def copy(self):
         return type(self)().set(self)
 

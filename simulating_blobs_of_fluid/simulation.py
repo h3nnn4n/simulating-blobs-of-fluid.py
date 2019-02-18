@@ -1,4 +1,5 @@
 from math import sqrt
+from random import uniform
 
 from .particle import Particle
 from .vector import Vector
@@ -6,28 +7,36 @@ from .vector import Vector
 
 class Simulation:
     def __init__(self):
-        self.particle_count = 10
-        self.dt = 0.1
+        self.particle_count = 100
+        self.dt = 0.0025
         self.gravity = Vector(0, 9.8).normalize()
 
-        self.stiffness = 2
-        self.stiffness_near = 1
-        self.rest_density = 3
+        self.stiffness = 0.4
+        self.stiffness_near = 0.8
+        self.rest_density = 2
 
         self.box_width = 200
         self.box_height = 200
         self.box_radius = 200
         self.box_radius_squared = self.box_radius**2
         self.grid_size = 10
-        self.iteraction_radius_size = 40
+        self.iteraction_radius_size = 20
         self.iteraction_radius_size_squared = self.iteraction_radius_size**2
         self.iteraction_radius = int((self.iteraction_radius_size / self.box_width) * self.grid_size)
 
         self.particles = [Particle() for _ in range(self.particle_count)]
+        self.scatter_particles()
 
         self.grid_hash = {}
 
+    def scatter_particles(self):
+        for particle in self.particles:
+            particle.position.random().set_mag(uniform(0, self.box_radius))
+            particle.old_postion.set(particle.position).random_move()
+            particle.velocity.random()
+
     def step(self):
+        self.grid_hash.clear()
         self.pass_1()
         self.pass_2()
         self.pass_3()
