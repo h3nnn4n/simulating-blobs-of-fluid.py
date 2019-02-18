@@ -1,3 +1,6 @@
+import multiprocessing
+
+from functools import partial
 from math import sqrt
 from random import uniform
 
@@ -5,7 +8,32 @@ from .particle import Particle
 from .vector import Vector
 
 
-class Simulation:
+def _pickle_method(method):
+    func_name = method.im_func.__name__
+    obj = method.im_self
+    cls = method.im_class
+    if func_name.startswith('__') and not func_name.endswith('__'):  # deal with mangled names
+        cls_name = cls.__name__.lstrip('_')
+        func_name = '_' + cls_name + func_name
+    return _unpickle_method, (func_name, obj, cls)
+
+
+def _unpickle_method(func_name, obj, cls):
+    for cls in cls.__mro__:
+        try:
+            func = cls.__dict__[func_name]
+        except KeyError:
+            pass
+        else:
+            break
+    return func.__get__(obj, cls)
+
+import copyreg
+import types
+copyreg.pickle(types.MethodType, _pickle_method, _unpickle_method)
+
+
+class SimulationParallel:
     def __init__(self, particle_count=100, dt=0.25, box_width=1000):
         self.particle_count = particle_count
         self.dt = dt
@@ -29,6 +57,8 @@ class Simulation:
 
         self.grid_hash = {}
 
+        self.pool = multiprocessing.Pool(8)
+
     def scatter_particles(self):
         for particle in self.particles:
             particle.position.random().set_mag(uniform(0, self.box_radius))
@@ -37,29 +67,26 @@ class Simulation:
 
     def step(self):
         self.grid_hash.clear()
-        self.pass_1()
-        self.pass_2()
-        self.pass_3()
+        self.pool.map(self.pass_1, enumerate(self.particles))
+        self.pool.map(self.pass_2, enumerate(self.particles))
+        self.pool.map(self.pass_3, enumerate(self.particles))
 
-    def pass_1(self):
-        for index, particle in enumerate(self.particles):
-            particle.update_old_postition()
+    def pass_1(self, index, particle):
+        particle.update_old_postition()
 
-            particle.apply_force(self.gravity, self.dt)
+        particle.apply_force(self.gravity, self.dt)
 
-            particle.update_position(self.dt)
-            self.hash_store(particle.position, index)
+        particle.update_position(self.dt)
+        self.hash_store(particle.position, index)
 
-    def pass_2(self):
-        for index, _ in enumerate(self.particles):
-            neighbours = self.get_neighbours_with_gradient(index)
-            self.update_densities(index, neighbours)
-            self.relax(index, neighbours, self.dt)
+    def pass_2(self, index, _):
+        neighbours = self.get_neighbours_with_gradient(index)
+        self.update_densities(index, neighbours)
+        self.relax(index, neighbours, self.dt)
 
-    def pass_3(self):
-        for particle in self.particles:
-            self.contain(particle)
-            self.update_velocity(particle)
+    def pass_3(self, _, particle):
+        self.contain(particle)
+        self.update_velocity(particle)
 
     def get_neighbours_with_gradient(self, index):
         neighbours = []
