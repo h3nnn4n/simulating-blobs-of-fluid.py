@@ -7,20 +7,20 @@ from .vector import Vector
 
 class Simulation:
     def __init__(self):
-        self.particle_count = 100
-        self.dt = 0.0025
-        self.gravity = Vector(0, 9.8).normalize()
+        self.particle_count = 200
+        self.dt = 0.25
+        self.gravity = Vector(0, -9.8).normalize()
 
-        self.stiffness = 0.4
-        self.stiffness_near = 0.8
-        self.rest_density = 2
+        self.stiffness = 35 * 0.025
+        self.stiffness_near = 100 * 0.025
+        self.rest_density = 10
 
-        self.box_width = 200
-        self.box_height = 200
-        self.box_radius = 200
+        self.box_width = 500
+        self.box_height = self.box_width
+        self.box_radius = self.box_width
         self.box_radius_squared = self.box_radius**2
-        self.grid_size = 10
-        self.iteraction_radius_size = 20
+        self.grid_size = 50
+        self.iteraction_radius_size = 10
         self.iteraction_radius_size_squared = self.iteraction_radius_size**2
         self.iteraction_radius = int((self.iteraction_radius_size / self.box_width) * self.grid_size)
 
@@ -135,8 +135,8 @@ class Simulation:
         if particle.position.norm_squared <= self.box_radius_squared:
             return
 
-        particle.position.normalize()
         particle.position.set_mag(self.box_radius)
+        particle.old_postion.set_mag(self.box_radius + 2.5)
 
     def update_velocity(self, particle):
         velocity = (particle.position - particle.old_postion) * (1 / self.dt)

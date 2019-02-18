@@ -11,13 +11,13 @@ class FluidRenderer(arcade.Window):
         self.size = size
         self.window_size = window_size
         self.fluid = fluid
-        self.scale = floor(window_size / size)
+        self.scale = window_size / (size * 2.05)
 
         self.frame_count = 0
         self.last_delta_time = 0
 
-        self.window_width = self.size * self.scale
-        self.window_height = self.size * self.scale
+        self.window_width = window_size
+        self.window_height = window_size
 
         super().__init__(self.window_width, self.window_height)
 
@@ -39,7 +39,7 @@ class FluidRenderer(arcade.Window):
         for particle in self.fluid.particles:
             position = particle.position
 
-            arcade.draw_circle_filled(position.x + self.window_size / 2, position.y +
+            arcade.draw_circle_filled((position.x * self.scale) + self.window_size / 2, (position.y * self.scale) +
                                       self.window_size / 2, 2, arcade.color.BLACK)
 
         draw_time = timeit.default_timer() - draw_start_time
