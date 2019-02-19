@@ -1,12 +1,10 @@
 from simulating_blobs_of_fluid.simulation import Simulation
-from simulating_blobs_of_fluid.simulation_parallel import SimulationParallel
 
 import timeit
 
 
 def main():
     simulation = Simulation(particle_count=2000)
-    # simulation = SimulationParallel(particle_count=2000)
 
     n_iters = 20
     total_fps = 0

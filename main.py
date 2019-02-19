@@ -6,7 +6,7 @@ import arcade
 
 def main():
     simulation = Simulation()
-    fluid_renderer = FluidRenderer(simulation.box_width, 800, simulation)
+    FluidRenderer(simulation.box_width, 800, simulation)
 
     arcade.run()
 

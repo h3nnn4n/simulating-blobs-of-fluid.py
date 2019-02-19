@@ -4,5 +4,5 @@
 
     "python.formatting.provider": "autopep8",
     "python.formatting.autopep8Args": ["--aggressive", "--aggressive", "--max-line-length=119"],
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
 }
