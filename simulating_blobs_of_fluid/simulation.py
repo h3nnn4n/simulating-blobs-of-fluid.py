@@ -136,7 +136,7 @@ class Simulation:
             return
 
         particle.position.set_mag(self.box_radius)
-        particle.old_postion.set_mag(self.box_radius + 2.5)
+        particle.old_postion.set_mag(self.box_radius + particle.position.dist(particle.old_postion))
 
     def update_velocity(self, particle):
         velocity = (particle.position - particle.old_postion) * (1 / self.dt)
