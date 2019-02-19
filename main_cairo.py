@@ -47,7 +47,7 @@ def main():
 
             ctx.fill()
 
-        context_manager.save("%06d.png" % i)
+        context_manager.save("%06d.png" % image_count)
 
         end_drawing = timeit.default_timer()
         time_drawing = end_drawing - start_drawing
