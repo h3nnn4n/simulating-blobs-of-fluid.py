@@ -5,7 +5,7 @@ import arcade
 
 
 def main():
-    simulation = Simulation(particle_count=25, dt=0.16, box_width=250)
+    simulation = Simulation(particle_count=50, dt=0.016, box_width=250)
     FluidRenderer(simulation.box_width, 800, simulation)
 
     arcade.run()
