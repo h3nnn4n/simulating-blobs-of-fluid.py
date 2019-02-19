@@ -9,13 +9,14 @@ class Simulation:
     def __init__(self, particle_count=100, dt=0.25, box_width=2000):
         self.particle_count = particle_count
         self.dt = dt
-        self.gravity = Vector(0, -9.8)
+        self.gravity = Vector(0, -35)
 
-        self.stiffness = 35 * 1
-        self.stiffness_near = 100 * 1
+        self.stiffness = 200 * 1
+        self.stiffness_near = 200 * 1
         self.rest_density = 5
 
         self.wall_restitution_coefficient = 0.6
+        self.particle_restitution_coefficient = 1.0
 
         self.box_width = box_width
         self.box_height = self.box_width
@@ -113,6 +114,7 @@ class Simulation:
             magnitude = particle.pressure * gradient + particle.pressure_near * gradient * gradient
             force.set(particle.position - neighbor_position)
             force.set_mag(magnitude * self.dt * self.dt)
+            force *= self.particle_restitution_coefficient
 
             particle.position.x += force.x * -0.5
             particle.position.y += force.y * -0.5
