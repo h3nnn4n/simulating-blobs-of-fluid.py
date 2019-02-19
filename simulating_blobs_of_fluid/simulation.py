@@ -9,18 +9,18 @@ class Simulation:
     def __init__(self, particle_count=100, dt=0.25, box_width=2000):
         self.particle_count = particle_count
         self.dt = dt
-        self.gravity = Vector(0, -9.8).normalize()
+        self.gravity = Vector(0, -9.8)
 
-        self.stiffness = 35 * 0.025
-        self.stiffness_near = 100 * 0.025
-        self.rest_density = 10
+        self.stiffness = 35 * 1
+        self.stiffness_near = 100 * 1
+        self.rest_density = 5
 
         self.box_width = box_width
         self.box_height = self.box_width
         self.box_radius = self.box_width
         self.box_radius_squared = self.box_radius**2
         self.grid_size = 50
-        self.iteraction_radius_size = 10
+        self.iteraction_radius_size = 20
         self.iteraction_radius_size_squared = self.iteraction_radius_size**2
         self.iteraction_radius = int((self.iteraction_radius_size / self.box_width) * self.grid_size)
 
@@ -110,7 +110,7 @@ class Simulation:
 
             magnitude = particle.pressure * gradient + particle.pressure_near * gradient * gradient
             force.set(particle.position - neighbor_position)
-            force.set_mag(magnitude)
+            force.set_mag(magnitude * self.dt * self.dt)
 
             particle.position.x += force.x * -0.5
             particle.position.y += force.y * -0.5
