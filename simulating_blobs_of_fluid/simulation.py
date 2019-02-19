@@ -6,7 +6,7 @@ from .vector import Vector
 
 
 class Simulation:
-    def __init__(self, particle_count=100, dt=0.25, box_width=1000):
+    def __init__(self, particle_count=100, dt=0.25, box_width=2000):
         self.particle_count = particle_count
         self.dt = dt
         self.gravity = Vector(0, -9.8).normalize()
