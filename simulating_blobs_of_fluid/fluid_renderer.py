@@ -38,6 +38,7 @@ class FluidRenderer(arcade.Window):
         self.fluid.step()
 
         radius = self.fluid.iteraction_radius * self.scale
+        influence_radius = self.fluid.iteraction_radius_size * self.scale
 
         for particle in self.fluid.particles:
             position = particle.position
@@ -51,6 +52,7 @@ class FluidRenderer(arcade.Window):
 
             arcade.draw_line(pos_x, pos_y, old_pos_x, old_pos_y, arcade.color.ORANGE_RED, 2)
             arcade.draw_circle_filled(pos_x, pos_y, radius, arcade.color.BLACK)
+            arcade.draw_circle_outline(pos_x, pos_y, influence_radius, arcade.color.PINK)
 
         draw_time = timeit.default_timer() - draw_start_time
 
@@ -59,6 +61,7 @@ class FluidRenderer(arcade.Window):
         arcade.draw_text("frame_count: %6d" % self.frame_count, 10, self.height - 14, arcade.color.BLACK, 12)
         arcade.draw_text("delta_time: %12.6f" % self.last_delta_time, 10, self.height - 32, arcade.color.BLACK, 12)
         arcade.draw_text("fps:       %12.6f" % fps, 10, self.height - 50, arcade.color.BLACK, 12)
+        arcade.draw_text("scale:     %12.6f" % self.scale, 10, self.height - 68, arcade.color.BLACK, 12)
 
     def update(self, delta_time):
         self.last_delta_time = delta_time
