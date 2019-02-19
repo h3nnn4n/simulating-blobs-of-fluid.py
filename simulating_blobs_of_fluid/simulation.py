@@ -53,7 +53,7 @@ class Simulation:
     def pass_2(self):
         for index, _ in enumerate(self.particles):
             neighbours = self.get_neighbours_with_gradient(index)
-            self.update_densities(index, neighbours)
+            self.update_pressure(index, neighbours)
             self.relax(index, neighbours, self.dt)
 
     def pass_3(self):
@@ -82,7 +82,7 @@ class Simulation:
 
         return neighbours
 
-    def update_densities(self, index, neighbours):
+    def update_pressure(self, index, neighbours):
         density = 0
         density_near = 0
 
