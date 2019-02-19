@@ -15,6 +15,8 @@ class Simulation:
         self.stiffness_near = 100 * 1
         self.rest_density = 5
 
+        self.wall_restitution_coefficient = 0.6
+
         self.box_width = box_width
         self.box_height = self.box_width
         self.box_radius = self.box_width
@@ -135,8 +137,10 @@ class Simulation:
         if particle.position.norm_squared <= self.box_radius_squared:
             return
 
+        bounce_energy = particle.position.dist(particle.old_postion) * self.wall_restitution_coefficient
+
         particle.position.set_mag(self.box_radius)
-        particle.old_postion.set_mag(self.box_radius + particle.position.dist(particle.old_postion))
+        particle.old_postion.set_mag(self.box_radius + bounce_energy)
 
     def update_velocity(self, particle):
         velocity = (particle.position - particle.old_postion) * (1 / self.dt)
