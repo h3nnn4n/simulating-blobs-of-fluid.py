@@ -3,6 +3,9 @@ from simulating_blobs_of_fluid.simulation import Simulation
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
+from OpenGL.GL import shaders
+
+import numpy as np
 
 import sys
 import timeit
@@ -16,6 +19,16 @@ def main():
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(800, 800)
     glutCreateWindow('fluid')
+
+    FRAGMENT_SHADER = shaders.compileShader(
+        """#version 120
+        void main() {
+            gl_FragColor = vec4( 0, 1, 0, 1 );
+        }""", GL_FRAGMENT_SHADER
+    )
+
+    shader = shaders.compileProgram(FRAGMENT_SHADER)
+    shaders.glUseProgram(shader)
 
     glutDisplayFunc(display)
     glutIdleFunc(display)
