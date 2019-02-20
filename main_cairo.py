@@ -6,10 +6,9 @@ from math import pi
 
 
 def main():
-    simulation = Simulation(particle_count=500, box_width=2000, dt=0.05)
+    simulation = Simulation(particle_count=1500, box_width=5000, dt=0.016)
     context_manager = ContextManager()
 
-    n_iters = 20
     total_fps = 0
     total_time = 0
     total_drawing_time = 0
@@ -19,7 +18,10 @@ def main():
 
     scale = context_manager.width / (simulation.box_width * 2)
 
-    for i in range(10001):
+    i = 0
+
+    while True:
+        i += 1
         start = timeit.default_timer()
         simulation.step()
         end = timeit.default_timer()
@@ -28,8 +30,8 @@ def main():
         total_fps += 1 / time
         total_time += time
 
-        if i % 100 != 0:
-            continue
+        # if i % 10 != 0:
+        #     continue
 
         image_count += 1
 
@@ -56,8 +58,8 @@ def main():
 
     print(
         "%10.6f %10.6f %10.6f %10.6f" %
-        (total_time / n_iters,
-         total_fps / n_iters,
+        (total_time / i,
+         total_fps / i,
          total_drawing_time / image_count,
          1 / (total_drawing_time / image_count)))
 
