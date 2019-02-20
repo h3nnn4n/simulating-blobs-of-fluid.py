@@ -11,7 +11,7 @@ class Simulation:
         self.dt = dt
         self.gravity = Vector(0, -35)
 
-        self.stiffness = 200 * 1
+        self.stiffness = 70 * 1
         self.stiffness_near = 200 * 1
         self.rest_density = 5
 
