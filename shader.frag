@@ -25,12 +25,8 @@ vec4 blob(vec2 uv, vec3 color) {
     return vec4(color.r * d, color.g * d, color.b * d, 0);
 }
 
-float max(vec3 a) {
-    return max(max(a.x, a.y), a.z);
-}
-
 vec4 threshold(vec4 color, float value){
-    if (max(color.xyz) <= value) {
+    if (color.x <= value) {
         return vec4(1, 1, 1, 1);
     }
 
