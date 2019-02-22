@@ -17,6 +17,9 @@ import random
 particle_count = 100
 simulation = Simulation(particle_count=particle_count, dt=0.016, box_width=250)
 particle_position = np.zeros((particle_count, 2), np.float32)
+program = None
+screen_x = 800
+screen_y = 800
 
 
 def read_shader(filename):
@@ -29,16 +32,23 @@ def read_shader(filename):
 
 
 def display():
-    global particle_position
+    simulation.step()
 
     for k, p in enumerate(simulation.particles):
         particle_position[k, 0] = p.position.x
         particle_position[k, 1] = p.position.y
 
-    particle_position[0, 0] = 1
-    particle_position[0, 1] = 1
-    particle_position[1, 0] = 1
-    particle_position[1, 1] = 1
+    particle_position[0, 0] = 0
+    particle_position[0, 1] = 0
+
+    loc = gl.glGetUniformLocation(program, "particle_pos")
+    gl.glUniform2fv(loc, particle_count, particle_position)
+
+    loc = gl.glGetUniformLocation(program, "resolution")
+    gl.glUniform2f(loc, float(screen_x), float(screen_y))
+
+    loc = gl.glGetUniformLocation(program, "particle_bouding_radius")
+    gl.glUniform1f(loc, float(simulation.box_radius))
 
     gl.glClear(gl.GL_COLOR_BUFFER_BIT)
     gl.glDrawArrays(gl.GL_TRIANGLE_STRIP, 0, 4)
@@ -55,15 +65,14 @@ def keyboard(key, x, y):
 
 
 def main():
-    global simulation
     global particle_count
     global particle_position
     # GLUT init
     # --------------------------------------
     glut.glutInit()
     glut.glutInitDisplayMode(glut.GLUT_DOUBLE | glut.GLUT_RGBA)
-    glut.glutCreateWindow('Hello world!')
-    glut.glutReshapeWindow(800, 800)
+    glut.glutCreateWindow('Awesome fluid simulation')
+    glut.glutReshapeWindow(screen_x, screen_y)
     glut.glutReshapeFunc(reshape)
     glut.glutDisplayFunc(display)
     glut.glutIdleFunc(display)
@@ -79,6 +88,7 @@ def main():
     # Build & activate program
     # --------------------------------------
     # Request a program and shader slots from GPU
+    global program
     program = gl.glCreateProgram()
     vertex = gl.glCreateShader(gl.GL_VERTEX_SHADER)
     fragment = gl.glCreateShader(gl.GL_FRAGMENT_SHADER)
@@ -152,9 +162,6 @@ def main():
     # --------------------------------------
     loc = gl.glGetUniformLocation(program, "scale")
     gl.glUniform1f(loc, 1.0)
-
-    loc = gl.glGetUniformLocation(program, "particle_pos")
-    gl.glUniform2fv(loc, particle_count, particle_position)
 
     # Enter mainloop
     # --------------------------------------
