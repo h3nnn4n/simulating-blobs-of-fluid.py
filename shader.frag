@@ -1,6 +1,10 @@
+#define INTENSITY 2.5
+#define GLOW 2.0
+#define BASE 20.0
+
 varying vec4 v_color;
 uniform vec4 gl_FragCoord;
-uniform vec2 particle_pos[100];
+uniform vec2 particle_pos[200];
 uniform vec2 resolution;
 uniform float particle_bouding_radius;
 
@@ -14,18 +18,32 @@ bool closer_than(float cutover_distance, vec2 pos) {
     return distance(pos, pixel_pos()) < cutover_distance;
 }
 
-void main() {
-    int size = 100;
-    bool is_close;
+vec4 blob(vec2 uv, vec3 color) {
+    float d = BASE / distance(uv, pixel_pos());
+    d = pow(d / INTENSITY, GLOW);
 
-    for (int i = 0; i < size; i++) {
-        is_close = closer_than(4.0, particle_pos[i]);
+    return vec4(color.r * d, color.g * d, color.b * d, 0);
+}
 
-        if (is_close) {
-            gl_FragColor = vec4(1, 0, 0, 1);
-            return;
-        }
+float max(vec3 a) {
+    return max(max(a.x, a.y), a.z);
+}
+
+vec4 threshold(vec4 color, float value){
+    if (max(color.xyz) <= value) {
+        return vec4(1, 1, 1, 1);
     }
 
-    gl_FragColor = vec4(0, 0, 0, 1);
+    return vec4(0, 0, 0, 1);
+}
+
+void main() {
+    int size = 200;
+    vec4 color = vec4(0, 0, 0, 1);
+
+    for (int i = 0; i < size; i++) {
+        color += blob(particle_pos[i], vec3(1, 0, 0));
+    }
+
+    gl_FragColor = threshold(color, 1.0);
 }

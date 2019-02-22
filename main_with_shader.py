@@ -16,8 +16,8 @@ import OpenGL.GLUT as glut
 from simulating_blobs_of_fluid.simulation import Simulation
 import random
 
-particle_count = 100
-simulation = Simulation(particle_count=particle_count, dt=0.016, box_width=250)
+particle_count = 200
+simulation = Simulation(particle_count=particle_count, dt=0.016, box_width=500)
 particle_position = np.zeros((particle_count, 2), np.float32)
 program = None
 screen_x = 800
