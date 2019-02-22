@@ -1,9 +1,11 @@
 # -----------------------------------------------------------------------------
-# Python & OpenGL for Scientific Visualization
+# Based on `Python & OpenGL for Scientific Visualization`
 # www.labri.fr/perso/nrougier/python+opengl
 # Copyright (c) 2017, Nicolas P. Rougier
 # Distributed under the 2-Clause BSD License.
+# Modified by Renan S Silva (h3nnn4n)
 # -----------------------------------------------------------------------------
+
 import random
 import sys
 import ctypes
