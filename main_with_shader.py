@@ -6,6 +6,7 @@
 # Modified by Renan S Silva (h3nnn4n)
 # -----------------------------------------------------------------------------
 
+import timeit
 import random
 import sys
 import ctypes
@@ -14,7 +15,7 @@ import OpenGL.GL as gl
 import OpenGL.GLUT as glut
 
 from simulating_blobs_of_fluid.simulation import Simulation
-import random
+from collections import deque
 
 particle_count = 300
 simulation = Simulation(particle_count=particle_count, dt=0.016, box_width=500)
@@ -22,6 +23,7 @@ particle_position = np.zeros((particle_count, 2), np.float32)
 program = None
 screen_x = 800
 screen_y = 800
+fps_counter = deque([], 100)
 
 
 def read_shader(filename):
@@ -34,8 +36,11 @@ def read_shader(filename):
 
 
 def display():
+    simulation_start = timeit.default_timer()
     simulation.step()
+    simulation_end = timeit.default_timer()
 
+    render_start = timeit.default_timer()
     for k, p in enumerate(simulation.particles):
         particle_position[k, 0] = p.position.x
         particle_position[k, 1] = p.position.y
@@ -52,6 +57,16 @@ def display():
     gl.glClear(gl.GL_COLOR_BUFFER_BIT)
     gl.glDrawArrays(gl.GL_TRIANGLE_STRIP, 0, 4)
     glut.glutSwapBuffers()
+
+    render_end = timeit.default_timer()
+
+    fps_counter.append(1.0 / (render_end - simulation_start))
+
+    print("simulation took: %8.4f   render took: %8.4f    FPS: %8.4f" % (
+        simulation_end - simulation_start,
+        render_end - render_start,
+        sum(fps_counter) / len(fps_counter)
+    ))
 
 
 def reshape(width, height):
