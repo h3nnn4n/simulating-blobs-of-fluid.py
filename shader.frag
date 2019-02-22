@@ -4,7 +4,7 @@
 
 varying vec4 v_color;
 uniform vec4 gl_FragCoord;
-uniform vec2 particle_pos[200];
+uniform vec2 particle_pos[300];
 uniform vec2 resolution;
 uniform float particle_bouding_radius;
 
@@ -38,7 +38,7 @@ vec4 threshold(vec4 color, float value){
 }
 
 void main() {
-    int size = 200;
+    int size = 300;
     vec4 color = vec4(0, 0, 0, 1);
 
     for (int i = 0; i < size; i++) {
