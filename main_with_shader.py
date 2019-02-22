@@ -40,9 +40,6 @@ def display():
         particle_position[k, 0] = p.position.x
         particle_position[k, 1] = p.position.y
 
-    particle_position[0, 0] = 0
-    particle_position[0, 1] = 0
-
     loc = gl.glGetUniformLocation(program, "particle_pos")
     gl.glUniform2fv(loc, particle_count, particle_position)
 
