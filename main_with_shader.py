@@ -35,12 +35,16 @@ def read_shader(filename):
     return code
 
 
+def reset():
+    simulation.scatter_particles()
+
+
 def display():
     simulation_start = timeit.default_timer()
     simulation.step()
-    simulation_end = timeit.default_timer()
+    # simulation_end = timeit.default_timer()
 
-    render_start = timeit.default_timer()
+    # render_start = timeit.default_timer()
     for k, p in enumerate(simulation.particles):
         particle_position[k, 0] = p.position.x
         particle_position[k, 1] = p.position.y
@@ -62,11 +66,11 @@ def display():
 
     fps_counter.append(1.0 / (render_end - simulation_start))
 
-    print("simulation took: %8.4f   render took: %8.4f    FPS: %8.4f" % (
-        simulation_end - simulation_start,
-        render_end - render_start,
-        sum(fps_counter) / len(fps_counter)
-    ))
+    # print("simulation took: %8.4f   render took: %8.4f    FPS: %8.4f" % (
+    #     simulation_end - simulation_start,
+    #     render_end - render_start,
+    #     sum(fps_counter) / len(fps_counter)
+    # ))
 
 
 def reshape(width, height):
@@ -76,6 +80,12 @@ def reshape(width, height):
 def keyboard(key, x, y):
     if key == b'\x1b':
         sys.exit()
+    elif key == b'r':
+        reset()
+    elif key == b'f':
+        print("FPS: %8.4f" % (
+            sum(fps_counter) / len(fps_counter)
+        ))
 
 
 def main():
