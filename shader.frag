@@ -1,10 +1,11 @@
-#define INTENSITY 2.5
+#define INTENSITY 4.5
 #define GLOW 2.0
 #define BASE 20.0
+#define N_PARTICLES 100
 
 varying vec4 v_color;
 uniform vec4 gl_FragCoord;
-uniform vec2 particle_pos[300];
+uniform vec2 particle_pos[N_PARTICLES];
 uniform vec2 resolution;
 uniform float particle_bouding_radius;
 
@@ -34,12 +35,11 @@ vec4 threshold(vec4 color, float value){
 }
 
 void main() {
-    int size = 300;
     vec4 color = vec4(0, 0, 0, 1);
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < N_PARTICLES; i++) {
         color += blob(particle_pos[i], vec3(1, 0, 0));
     }
 
-    gl_FragColor = threshold(color, 1.0);
+    gl_FragColor = color;
 }
