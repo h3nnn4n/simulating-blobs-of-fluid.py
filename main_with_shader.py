@@ -17,8 +17,8 @@ import OpenGL.GLUT as glut
 from simulating_blobs_of_fluid.simulation import Simulation
 from collections import deque
 
-particle_count = 300
-simulation = Simulation(particle_count=particle_count, dt=0.016, box_width=500)
+particle_count = 100
+simulation = Simulation(particle_count=particle_count, dt=0.016, box_width=300)
 particle_position = np.zeros((particle_count, 2), np.float32)
 program = None
 screen_x = 800
@@ -37,6 +37,12 @@ def read_shader(filename):
 
 def reset():
     simulation.scatter_particles()
+
+
+def kill_velocity():
+    for particle in simulation.particles:
+        particle.velocity.zero()
+        particle.old_postion.set(particle.position)
 
 
 def display():
@@ -78,10 +84,23 @@ def reshape(width, height):
 
 
 def keyboard(key, x, y):
-    if key == b'\x1b':
+    if key == b'\x1b' or key == b'q':
         sys.exit()
     elif key == b'r':
         reset()
+    elif key == b'k':
+        kill_velocity()
+    elif key == b'1':
+        simulation.stiffness = float(input('stifness (%8.4f): ' % (simulation.stiffness)))
+    elif key == b'2':
+        simulation.stiffness_near = float(input('stiffness_near (%8.4f): ' % (simulation.stiffness_near)))
+    elif key == b'3':
+        simulation.rest_density = int(input('rest_density (%8.4f): ' % (simulation.rest_density)))
+    elif key == b'4':
+        simulation.iteraction_radius_size = int(
+            input(
+                'iteraction_radius_size (%8.4f): ' %
+                (simulation.iteraction_radius_size)))
     elif key == b'f':
         print("FPS: %8.4f" % (
             sum(fps_counter) / len(fps_counter)
