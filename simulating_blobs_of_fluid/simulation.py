@@ -34,7 +34,7 @@ class Simulation:
 
     def scatter_particles(self):
         for particle in self.particles:
-            particle.position.random().set_mag(uniform(0, self.box_radius))
+            particle.position.random().set_mag(uniform(self.box_radius * 0.1, self.box_radius * 0.40))
             particle.old_postion.set(particle.position).random_move()
             particle.velocity.random()
 
