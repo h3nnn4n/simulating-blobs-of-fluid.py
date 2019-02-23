@@ -136,7 +136,9 @@ class Simulation:
         return 1.0 - (distance / self.iteraction_radius_size)
 
     def contain(self, particle):
-        if particle.position.norm_squared <= self.box_radius_squared:
+        inside = particle.position.norm_squared <= self.box_radius_squared
+
+        if inside:
             return
 
         bounce_energy = particle.position.dist(particle.old_postion) * self.wall_restitution_coefficient
