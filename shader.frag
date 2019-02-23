@@ -41,5 +41,5 @@ void main() {
         color += blob(particle_pos[i], vec3(1, 0, 0));
     }
 
-    gl_FragColor = color;
+    gl_FragColor = threshold(color, 0.5);
 }
